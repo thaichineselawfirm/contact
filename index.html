@@ -797,4 +797,45 @@
 
   // Copy to clipboard helper
   function copyText(text, message){
-    if(naviga
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(()=>showToast(message||('Copied: '+text)));
+    } else {
+      const ta = document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select();
+      try{document.execCommand('copy');}catch(e){}
+      document.body.removeChild(ta);
+      showToast(message||('Copied: '+text));
+    }
+  }
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)';
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(()=>{t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(20px)';},2400);
+  }
+
+  const I18N = {
+    th: {eyebrow:"สำนักงานกฎหมายไทย-จีน · 泰中律所",h1a:"Thai Chinese",h1b:"Law Firm",h1th:"ทนายพูดจีนได้ · รับว่าความ · ที่ปรึกษากฎหมายธุรกิจ",lede:"ให้บริการทางกฎหมาย ที่ปรึกษาและคดี ทั้งบุคคลและนิติบุคคล จดทะเบียนบริษัท วีซ่า DBD BOI ขอจดโรงงาน EIA ฯลฯ — ทุกช่องทางติดต่อรวมไว้ในหน้าเดียว",b1:"ทนายพูดจีน-ไทย",b2:"DBD · BOI · วีซ่า",b3:"โรงงาน · EIA",b4:"รับว่าความทุกศาล","cta-call":"โทรเลย 065-431-6810","cta-line":"ทักไลน์","cta-wechat":"WeChat: thailaw999","cta-email":"ส่งอีเมล",ribbon:"Since established · ทนายมืออาชีพ",cardline:"ที่ปรึกษากฎหมายธุรกิจและการลงทุนไทย-จีน · 泰中律所",hours:"จ-ศ 08:30–17:30",thai:"ประเทศไทย",trust:"ทนายที่เชื่อถือได้",div1:"Contact Channels · ช่องทางติดต่อ","ch-title":"เลือกช่องทางที่คุณสะดวก","ch-sub":"แตะการ์ดด้านล่างเพื่อโทร/แชท/อีเมลทันที — รองรับทั้งภาษาไทย จีน และอังกฤษ","phone-l":"โทรศัพท์ · Phone",div2:"Scan · Add · Chat","qr-title":"สแกน QR เพิ่มเพื่อนทันที","qr-sub":"รับคำปรึกษาเบื้องต้นผ่าน LINE Official Account · ตอบเร็วในเวลาทำการ","srv-title":"บริการของเรา · 服务范围","srv-sub":"ทีมทนายความครอบคลุมทุกด้านกฎหมายธุรกิจ-การลงทุนไทย-จีน",s1t:"จดทะเบียน",s1d:"บริษัท · DBD · BOI",s2t:"วีซ่า · Work Permit",s2d:"ทุกประเภท · ต่ออายุ",s3t:"โรงงาน · EIA",s3d:"ขออนุญาต · กำกับ",s4t:"ว่าความ · ฟ้องคดี",s4d:"แพ่ง · อาญา · แรงงาน","hrs-title":"เวลาทำการ · 营业时间","mon-fri":"จันทร์ – ศุกร์","sat-sun":"เสาร์ – อาทิตย์",closed:"ปิดทำการ","qr-h":"เพิ่มเพื่อนทาง LINE","qr-online":"ออนไลน์ · พร้อมตอบ","qr-add":"กดเพิ่มเพื่อน","qr-zoom":"ขยาย QR","qr-modal-h":"สแกน QR เพิ่มเพื่อน LINE","qr-line-h":"เพิ่มเพื่อน LINE","qr-wechat-h":"添加微信 / Add WeChat","qr-scan-cn":"扫码 · 添加好友","qr-copy":"คัดลอก ID","qr-helper":"เลือกแอปที่คุณสะดวก · แตะที่ QR เพื่อขยายเต็มจอ","cta-title":"ปรึกษาทนายผู้เชี่ยวชาญไทย-จีน","cta-sub":"โทรหรือทักเข้ามาได้ทันที · มีทีมงานพูดได้ทั้งไทย จีน อังกฤษ พร้อมดูแลคดีและงานที่ปรึกษาธุรกิจ","cta-call2":"โทร 065-431-6810","cta-line2":"ทักไลน์เลย",rights:"สงวนลิขสิทธิ์",made:"หน้ารวมช่องทางติดต่อ · Made with care for our clients"},
+    en: {eyebrow:"Thai Chinese Law Firm · 泰中律所",h1a:"Thai Chinese",h1b:"Law Firm",h1th:"Bilingual TH-CN Attorneys · Litigation · Business Counsel",lede:"Legal counsel & litigation for individuals and corporations — company registration, visas, DBD, BOI, factory & EIA permits, and more. All our contact channels in one place.",b1:"Mandarin & Thai",b2:"DBD · BOI · Visa",b3:"Factory · EIA",b4:"All Court Levels","cta-call":"Call 065-431-6810","cta-line":"Chat on LINE","cta-wechat":"WeChat: thailaw999","cta-email":"Send Email",ribbon:"Trusted Since Established",cardline:"Thai-Chinese Business & Investment Legal Counsel · 泰中律所",hours:"Mon–Fri 08:30–17:30",thai:"Thailand",trust:"Trusted Attorneys",div1:"Contact Channels","ch-title":"Pick a channel that works for you","ch-sub":"Tap any card to call, chat, or email instantly — fluent in Thai, Mandarin, and English.","phone-l":"Phone",div2:"Scan · Add · Chat","qr-title":"Scan QR to add us on LINE","qr-sub":"Get quick consultation via LINE Official Account · Fast response during business hours","srv-title":"Our Services · 服务范围","srv-sub":"Comprehensive Thai-Chinese business & investment legal services",s1t:"Registration",s1d:"Company · DBD · BOI",s2t:"Visa · Work Permit",s2d:"All types · Renewal",s3t:"Factory · EIA",s3d:"Licensing · Compliance",s4t:"Litigation",s4d:"Civil · Criminal · Labor","hrs-title":"Business Hours · 营业时间","mon-fri":"Monday – Friday","sat-sun":"Saturday – Sunday",closed:"Closed","qr-h":"Add us on LINE","qr-online":"Online · Ready to reply","qr-add":"Add friend","qr-zoom":"Zoom QR","qr-modal-h":"Scan QR to add LINE friend","qr-line-h":"Add on LINE","qr-wechat-h":"Add on WeChat · 微信","qr-scan-cn":"Scan · Add friend","qr-copy":"Copy ID","qr-helper":"Pick the app you prefer · Tap QR to enlarge","cta-title":"Consult a TH-CN Bilingual Attorney","cta-sub":"Call or message anytime · Our team speaks Thai, Mandarin, and English for both litigation and business counsel.","cta-call2":"Call 065-431-6810","cta-line2":"Chat on LINE",rights:"All rights reserved",made:"Contact hub · Made with care for our clients"},
+    zh: {eyebrow:"泰中律师事务所 · Thai Chinese Law Firm",h1a:"泰中",h1b:"律师事务所",h1th:"中泰双语律师 · 诉讼 · 商业法律顾问",lede:"为个人与企业提供法律咨询与诉讼服务 — 公司注册、签证、DBD、BOI、工厂许可与 EIA 等。所有联系方式集合于此页面。",b1:"中泰双语",b2:"DBD · BOI · 签证",b3:"工厂 · EIA",b4:"各级法院诉讼","cta-call":"拨打 065-431-6810","cta-line":"LINE 咨询","cta-wechat":"微信:thailaw999","cta-email":"发送邮件",ribbon:"专业值得信赖",cardline:"泰中商业与投资法律顾问 · 泰中律所",hours:"周一至周五 08:30–17:30",thai:"泰国",trust:"值得信赖的律师",div1:"联系渠道","ch-title":"请选择您方便的联系方式","ch-sub":"点击下方卡片即可立即拨打/聊天/发送邮件 — 支持中文、泰文与英文。","phone-l":"电话",div2:"扫码 · 添加 · 咨询","qr-title":"扫码添加 LINE 好友","qr-sub":"通过 LINE 官方账号获取快速法律咨询 · 营业时间内迅速回复","srv-title":"服务范围 · Our Services","srv-sub":"全面的中泰商业与投资法律服务",s1t:"公司注册",s1d:"公司 · DBD · BOI",s2t:"签证 · 工作证",s2d:"各类签证 · 续签",s3t:"工厂 · EIA",s3d:"许可 · 合规",s4t:"诉讼业务",s4d:"民事 · 刑事 · 劳动","hrs-title":"营业时间 · Business Hours","mon-fri":"周一 – 周五","sat-sun":"周六 – 周日",closed:"休息","qr-h":"添加 LINE 好友","qr-online":"在线 · 随时回复","qr-add":"加为好友","qr-zoom":"放大二维码","qr-modal-h":"扫码添加 LINE 好友","qr-line-h":"添加 LINE","qr-wechat-h":"添加微信","qr-scan-cn":"扫码 · 添加好友","qr-copy":"复制 ID","qr-helper":"选择您方便的应用 · 点击二维码可放大","cta-title":"咨询中泰双语专业律师","cta-sub":"随时来电或留言咨询 · 团队精通泰语、中文与英文，为您提供诉讼与商业法律服务。","cta-call2":"拨打 065-431-6810","cta-line2":"LINE 咨询",rights:"版权所有",made:"联系页面 · 用心为客户打造"}
+  };
+  let currentLang='th';
+  function setLang(lang){
+    currentLang=lang;
+    document.documentElement.lang = lang==='zh'?'zh-Hant':(lang==='en'?'en':'th');
+    document.querySelectorAll('[data-i18n]').forEach(el=>{
+      const k=el.getAttribute('data-i18n');
+      if(I18N[lang]&&I18N[lang][k]) el.textContent=I18N[lang][k];
+    });
+    document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+    try{localStorage.setItem('tclf_lang',lang);}catch(e){}
+  }
+  document.querySelectorAll('.lang button').forEach(b=>{
+    b.addEventListener('click',()=>setLang(b.dataset.lang));
+  });
+  let initLang='th';
+  try{const s=localStorage.getItem('tclf_lang'); if(s) initLang=s;}catch(e){}
+  setLang(initLang);
+</script>
+</body>
+</html>
